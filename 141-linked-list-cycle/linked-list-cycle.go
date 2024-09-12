@@ -5,16 +5,16 @@
  *     Next *ListNode
  * }
  */
-type Filler struct{}
+type Set map[*ListNode]struct{}
 
 func hasCycle(head *ListNode) bool {
-    m := make(map[*ListNode]*Filler)
+    m := make(Set)
 
     for head != nil {
         if _, ok := m[head]; ok {
             return true
         }
-        m[head] = new(Filler)
+        m[head] = struct{}{}
         head = head.Next
     }
 

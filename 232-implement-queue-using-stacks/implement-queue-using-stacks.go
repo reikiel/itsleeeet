@@ -37,6 +37,13 @@ func Constructor() MyQueue {
 
 
 func (this *MyQueue) Push(x int)  {
+    for !this.s2.Empty() {
+        if val, err := this.s2.Pop(); err == nil {
+            this.s1.Push(val)
+        } else {
+            fmt.Println("Error: ", err)
+        }
+    }
     this.s1.Push(x)
 }
 
@@ -56,14 +63,6 @@ func (this *MyQueue) Pop() int {
 
     popped, _ := this.s2.Pop()
 
-    for !this.s2.Empty() {
-        if val, err := this.s2.Pop(); err == nil {
-            this.s1.Push(val)
-        } else {
-            fmt.Println("Error: ", err)
-        }
-    }
-
     return popped
 }
 
@@ -81,22 +80,12 @@ func (this *MyQueue) Peek() int {
         }
     }
 
-    peek := this.s2.Peek()
-
-    for !this.s2.Empty() {
-        if val, err := this.s2.Pop(); err == nil {
-            this.s1.Push(val)
-        } else {
-            fmt.Println("Error: ", err)
-        }
-    }
-
-    return peek
+    return this.s2.Peek()
 }
 
 
 func (this *MyQueue) Empty() bool {
-    return this.s1.Empty()
+    return this.s1.Empty() && this.s2.Empty()
 }
 
 

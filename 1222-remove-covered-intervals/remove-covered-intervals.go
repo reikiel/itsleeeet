@@ -7,13 +7,11 @@ func removeCoveredIntervals(intervals [][]int) int {
         if intervals[i][0] == intervals[j][0] {
             return intervals[i][1] > intervals[j][1]
         }
-
-        return intervals[i][0] <= intervals[j][0]
+        return intervals[i][0] < intervals[j][0]
     })
 
     i, count := 0, 0
-
-    for j := 1; j < len(intervals); j++ {
+    for j := 1; j < len(intervals) ; j++ {
         if intervals[i][1] < intervals[j][1] {
             i = j
             continue
@@ -21,5 +19,6 @@ func removeCoveredIntervals(intervals [][]int) int {
         count += 1
     }
 
-    return len(intervals)-count
+    return len(intervals) - count
+    
 }

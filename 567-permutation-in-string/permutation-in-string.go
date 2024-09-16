@@ -1,49 +1,54 @@
-func check(s1, s2 []int) bool {
-	for i := 0; i < 26; i++ {
-		if s1[i] != s2[i] {
-			return false
-		}
-	}
-	return true
-}
+
 
 func checkInclusion(s1 string, s2 string) bool {
-	n1, n2 := len(s1), len(s2)
+	
     // No point in processing if length of s1 is greater than s2.
-	if n1 > n2 {
-		return false
-	}
+	if len(s1) > len(s2) { return false }
 
-    // Create a map for s1 once. Need a mapping for each character 
-    // and its number of occurrences.
-	s1Map := make([]int, 26)
-	for i := 0; i < n1; i++ {
-		s1Map[s1[i]-'a']++
-	}
+    // keep track of each letter and their count, for each of the string
+    // 'b' - 'a' will give 1, and will populate a[1]
+    // 'z' - 'a' will give 25, and will populate a[25]
+    a1, a2 := [26]int{}, [26]int{}
 
-    // Create a similar map for s2. We include all except one character
-    // since it will be added in the loop.
-	s2Map := make([]int, 26)
-	for i := 0; i < n1-1; i++ {
-		s2Map[s2[i]-'a']++
-	}
+    // populate s1 letters and counts
+    for _, val := range s1 {
+        a1[val-'a'] += 1
+    }
+	
 
-    // Sliding window loop. 
-	for i := n1 - 1; i < n2; i++ {
-        // Add a char from s2 to the window
-		s2Map[s2[i]-'a']++
+    // For s2, a2 will be the window 
+    // we include all except last character
+    // since it will be added in the sliding window loop.
+    for i := 0; i < len(s1)-1; i++ {
+        a2[s2[i]-'a'] += 1
+    }
+	
 
-        // Check if s1 and s2 maps are equal. 
+    // Sliding window loop
+    // add new last character
+    // remove old start character 
+    start := 0
+	for i := len(s1)-1; i < len(s2) ; i++ {
+		a2[s2[i]-'a'] += 1
+
+        // Check if the maps are equal. 
         // If they are equal, we have found a permutation.
-		if check(s1Map, s2Map) {
-			return true
-		}
+		if checkEqual(a1, a2) { return true }
 
         // Remove the first character from the window to prepare
         // for the next iteration.
-		s2Map[s2[i-n1+1]-'a']--
+		a2[s2[start]-'a'] -= 1
+        start += 1
 	}
 
     // No permutation found.
 	return false
+}
+
+func checkEqual(a, b [26]int) bool {
+    for i := 0; i < 26 ; i++ {
+        if a[i] != b[i] { return false }
+    }
+
+    return true
 }

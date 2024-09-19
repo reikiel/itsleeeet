@@ -59,10 +59,7 @@ func (this *MyStack) Pop() int {
 
     y := this.q1.pop()
     
-    for !this.q2.empty() {
-        x := this.q2.pop()
-        this.q1.push(x)
-    }
+    this.q1, this.q2 = this.q2, this.q1
 
     return y
 }
@@ -77,10 +74,7 @@ func (this *MyStack) Top() int {
     y := this.q1.pop()
     this.q2.push(y)
 
-    for !this.q2.empty() {
-        x := this.q2.pop()
-        this.q1.push(x)
-    }
+    this.q1, this.q2 = this.q2, this.q1
 
     return y
 }

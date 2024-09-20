@@ -1,17 +1,19 @@
 func numPairsDivisibleBy60(time []int) int {
     res:=0
-    record:=map[int]int{}
-    for _,d:=range time{
-        d=d%60
+    m := [60]int{}
 
-        if d == 0 {
-            res += record[d]
+    for _, v := range time {
+        rem := v % 60
+
+        if rem == 0 {
+            res += m[0]
         } else {
-            res += record[60-d]
+            res += m[60-rem]
         }
 
+        m[rem] = m[rem] + 1
 
-        record[d] += 1
-    }
+    } 
+    
     return res
 }

@@ -53,7 +53,7 @@ func sortedSquares(nums []int) []int {
     }
 
     // separate check if b != len(nums)
-    if b != len(nums) {
+    if b <= len(nums)-1 {
         for i:=b; i<len(nums); i++ {
             res[curr] = nums[i] * nums[i]
             curr++

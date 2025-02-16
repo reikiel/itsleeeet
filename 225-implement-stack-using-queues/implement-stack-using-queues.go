@@ -1,87 +1,74 @@
-/**
- * Do error handling for peek/pop?
- */
-
-type Queue []int
-
-func (q *Queue) push(x int) {
-    *q = append(*q, x)
-}
-
-func (q *Queue) pop() int {
-    res := (*q)[0]
-    *q = (*q)[1:]
-    return res
-}
-
-func (q *Queue) peek() int {
-    return (*q)[0]
-}
-
-func (q *Queue) empty() bool {
-    return len(*q) == 0
-}
-
-func (q *Queue) size() int {
-    return len(*q)
-}
-
-
 type MyStack struct {
-    q1 Queue
-    q2 Queue
+    q1 []int
+    q2 []int
 }
 
 
 func Constructor() MyStack {
     return MyStack{
-        q1: make(Queue, 0),
-        q2: make(Queue, 0),
+        q1: []int{},
+        q2: []int{},
     }
 }
 
 
 func (this *MyStack) Push(x int)  {
-    for !this.q2.empty() {
-        x := this.q2.pop()
-        this.q1.push(x)
+    if len(this.q2) != 0 {
+        this.q2 = append(this.q2, x)
+        return  
     }
-
-    this.q1.push(x)
+    this.q1 = append(this.q1, x) 
 }
 
 
 func (this *MyStack) Pop() int {
-    for this.q1.size() > 1 {
-        x := this.q1.pop()
-        this.q2.push(x)
+    if len(this.q2) != 0 {
+        for len(this.q2) > 1 {
+            this.q1 = append(this.q1, this.q2[0])
+            this.q2 = this.q2[1:]
+        }
+        x := this.q2[0]
+        this.q2 = this.q2[:0]
+        return x
     }
 
-    y := this.q1.pop()
-    
-    this.q1, this.q2 = this.q2, this.q1
-
-    return y
+    // else do for q1
+    for len(this.q1) > 1 {
+        this.q2 = append(this.q2, this.q1[0])
+        this.q1 = this.q1[1:]
+    }
+    x := this.q1[0]
+    this.q1 = this.q1[:0]
+    return x
 }
 
 
 func (this *MyStack) Top() int {
-    for this.q1.size() > 1 {
-        x := this.q1.pop()
-        this.q2.push(x)
+    if len(this.q2) != 0 {
+        for len(this.q2) > 1 {
+            this.q1 = append(this.q1, this.q2[0])
+            this.q2 = this.q2[1:]
+        }
+        x := this.q2[0]
+        this.q1 = append(this.q1, this.q2[0])
+        this.q2 = this.q2[:0]
+        return x
     }
 
-    y := this.q1.pop()
-    this.q2.push(y)
-
-    this.q1, this.q2 = this.q2, this.q1
-
-    return y
+    // else do for q1
+    for len(this.q1) > 1 {
+        this.q2 = append(this.q2, this.q1[0])
+        this.q1 = this.q1[1:]
+    }
+    x := this.q1[0]
+    this.q2 = append(this.q2, this.q1[0])
+    this.q1 = this.q1[:0]
+    return x
 }
 
 
 func (this *MyStack) Empty() bool {
-    return this.q1.empty() && this.q2.empty()
+    return len(this.q1) == 0 && len(this.q2) == 0
 }
 
 

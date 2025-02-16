@@ -1,91 +1,54 @@
-type Stack []int
-
-func (s *Stack) Push(x int) {
-    *s = append(*s, x)
-}
-
-func (s *Stack) Pop() (int, error) {
-    if len(*s) == 0 {
-        return 0, errors.New("stack is empty, cannot pop")
-    }
-    val := (*s)[len(*s)-1]
-    *s = (*s)[:len(*s)-1]
-    return val, nil
-}
-
-func (s *Stack) Peek() int {
-    return (*s)[len(*s)-1]
-}
-
-func (s *Stack) Empty() bool {
-    return len(*s) == 0
-}
-
-
 type MyQueue struct {
-    s1 Stack
-    s2 Stack
+    s1 []int // main - for push
+    s2 []int // for peek/pop
 }
 
 
 func Constructor() MyQueue {
     return MyQueue{
-        s1: make(Stack, 0),
-        s2: make(Stack, 0),
+        s1: []int{},
+        s2: []int{},
     }
 }
 
 
 func (this *MyQueue) Push(x int)  {
-    for !this.s2.Empty() {
-        if val, err := this.s2.Pop(); err == nil {
-            this.s1.Push(val)
-        } else {
-            fmt.Println("Error: ", err)
+    if len(this.s2) != 0 {
+        for len(this.s2) > 0 {
+            this.s1 = append(this.s1, this.s2[len(this.s2)-1])
+            this.s2 = this.s2[:len(this.s2)-1]
         }
     }
-    this.s1.Push(x)
+    this.s1 = append(this.s1, x)
 }
 
 
 func (this *MyQueue) Pop() int {
-    if len(this.s1) == 0 {
-        fmt.Println("Pop: Queue is empty")
-    }
-
-    for !this.s1.Empty() {
-        if val, err := this.s1.Pop(); err == nil {
-            this.s2.Push(val)
-        } else {
-            fmt.Println("Error: ", err)
+    if len(this.s1) != 0 {
+        for len(this.s1) > 0 {
+            this.s2 = append(this.s2, this.s1[len(this.s1)-1])
+            this.s1 = this.s1[:len(this.s1)-1]
         }
     }
-
-    popped, _ := this.s2.Pop()
-
-    return popped
+    x := this.s2[len(this.s2)-1]
+    this.s2 = this.s2[:len(this.s2)-1]
+    return x
 }
 
 
 func (this *MyQueue) Peek() int {
-        if len(this.s1) == 0 {
-        fmt.Println("Peek: Queue is empty")
-    }
-
-    for !this.s1.Empty() {
-        if val, err := this.s1.Pop(); err == nil {
-            this.s2.Push(val)
-        } else {
-            fmt.Println("Error: ", err)
+    if len(this.s1) != 0 {
+        for len(this.s1) > 0 {
+            this.s2 = append(this.s2, this.s1[len(this.s1)-1])
+            this.s1 = this.s1[:len(this.s1)-1]
         }
     }
-
-    return this.s2.Peek()
+    return this.s2[len(this.s2)-1]
 }
 
 
 func (this *MyQueue) Empty() bool {
-    return this.s1.Empty() && this.s2.Empty()
+    return len(this.s1)==0 && len(this.s2)==0
 }
 
 

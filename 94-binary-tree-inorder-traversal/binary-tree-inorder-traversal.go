@@ -7,21 +7,13 @@
  * }
  */
 func inorderTraversal(root *TreeNode) []int {
-    if root == nil {
-        return []int{}
-    }
-
     stack := []*TreeNode{}
     res := []int{}
 
-    stack = append(stack, root)
-
-    for len(stack) > 0 {
-        for root.Left != nil {
-            stack = append(stack, root.Left)
-            temp := root
+    for root != nil || len(stack) > 0 {
+        for root != nil {
+            stack = append(stack, root)
             root = root.Left
-            temp.Left = nil
         }
 
         // else
@@ -31,11 +23,9 @@ func inorderTraversal(root *TreeNode) []int {
         root = stack[len(stack)-1]
         stack = stack[:len(stack)-1]
         res = append(res, root.Val)
-        if root.Right != nil {
-            stack = append(stack, root.Right)
-            root = root.Right
-        }
-
+        
+        // dont need append here, will be appended in next iteration if not nil
+        root = root.Right
     }
     return res
 }

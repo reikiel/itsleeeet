@@ -5,11 +5,11 @@ func duplicateZeros(arr []int)  {
 
     for p2 < len(arr) {
         arr[p2] = temp[p1]
-        if temp[p1] == 0 && p2<len(arr)-1{
+        if temp[p1] == 0 && p2 < len(arr)-1 {
             p2++
             arr[p2] = 0
         }
-        p1++
         p2++
+        p1++
     }
 }

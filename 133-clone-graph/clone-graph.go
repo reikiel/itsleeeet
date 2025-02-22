@@ -7,50 +7,35 @@
  */
 
 func cloneGraph(node *Node) *Node {
+    visited := make(map[int]*Node)
+    return cloneNode(node, visited)
+}
+
+func cloneNode(node *Node, visited map[int]*Node) *Node {
     if node == nil {
         return nil
     }
-    visited := [101]bool{}
-    queue := []*Node{node} // queue contains old nodes
-    cloneMap := make(map[int]*Node) // map contains new nodes
 
-    cloneMap[1] = &Node{ 
-        Val: 1,
+    // if already cloned, return the clone
+    if clone, exists := visited[node.Val]; exists {
+        return clone
     }
 
-    for len(queue) > 0 {
-        // pop from queue
-        currOld := queue[0]
-        queue = queue[1:]
-
-        // if visited continue?
-        if visited[currOld.Val] {
-            continue
-        }
-
-        currClone := cloneMap[currOld.Val]
-
-        for _, n := range currOld.Neighbors {
-            // if map[n.Val], use that as already cloned. 
-            // else make a clone of n and add to map
-            var newNeigh *Node
-            if _, ok := cloneMap[n.Val]; ok {
-                newNeigh = cloneMap[n.Val]
-            } else {
-                newNeigh = &Node{
-                    Val: n.Val,
-                }
-                cloneMap[n.Val] = newNeigh
-            }
-            // add to newNode.Neighbours
-            // push n to queue
-            currClone.Neighbors = append(currClone.Neighbors, newNeigh)
-            queue = append(queue, n)
-        }
-        // mark current node visited
-        visited[currOld.Val] = true
-        
+    // clone node and initialise neighbors
+    // since we know how many from node
+    root := &Node{
+        Val: node.Val,
+        Neighbors: make([]*Node, len(node.Neighbors)),
     }
-    
-    return cloneMap[1]
+
+    // Store in visited
+    visited[node.Val] = root
+
+    // Recursively clone all neighbors
+    // add to root.Neighbors at the same time
+    for i, neigh := range node.Neighbors {
+        root.Neighbors[i] = cloneNode(neigh, visited)
+    }
+
+    return root
 }

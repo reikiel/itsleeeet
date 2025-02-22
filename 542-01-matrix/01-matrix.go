@@ -1,52 +1,42 @@
 func updateMatrix(mat [][]int) [][]int {
-    // res := make([][]int, len(mat))
-    // for i:= range res {
-    //     res[i] = make([]int, len(mat[0]))
-    // }
-
-    rows, cols := len(mat), len(mat[0])
-
     q := [][2]int{}
 
     for i, row := range mat {
+
         for j, val := range row {
-            if val == 0 {
-                q = append(q, [2]int{i,j})
+            if val != 0 {
+                mat[i][j] = math.MaxInt64
             } else {
-                mat[i][j] = math.MaxInt32
+                // the 0s will be initialised to 0 alr
+                // we want to start checking from 0s
+                q = append(q, [2]int{i,j})
             }
         }
     }
 
+    dir := [4][2]int{
+        [2]int{1,0},
+        [2]int{-1,0},
+        [2]int{0,1},
+        [2]int{0,-1},
+    }
+
     for len(q) > 0 {
-        // pop from queue
+        // pop
         curr := q[0]
         q = q[1:]
+        i,j := curr[0], curr[1]
 
-        i, j := curr[0], curr[1]
-
-        // see for each direction
-        // if curr + 1 is < than comparing, then assign comparing to curr+1 and add to queue
-        // if not means there was already a smaller distance found
-        if i > 0 && mat[i-1][j] > mat[i][j] + 1 {
-            mat[i-1][j] = mat[i][j] + 1
-            q = append(q, [2]int{i-1,j})
+        for _, d := range dir {
+            d0, d1 := d[0], d[1]
+            if i+d0 >= 0 && i+d0 < len(mat) && j+d1 >= 0 && j+d1 <len(mat[0]) && mat[i+d0][j+d1] > mat[i][j] + 1 {
+                mat[i+d0][j+d1] = mat[i][j] + 1
+                q = append(q, [2]int{i+d0,j+d1})
+            }
+            
         }
-
-        if i < rows-1 && mat[i+1][j] > mat[i][j] + 1 {
-            mat[i+1][j] = mat[i][j] + 1
-            q = append(q, [2]int{i+1,j})
-        }
-
-        if j > 0 && mat[i][j-1] > mat[i][j] + 1 {
-            mat[i][j-1] = mat[i][j] + 1
-            q = append(q, [2]int{i,j-1})
-        }
-
-        if j < cols-1 && mat[i][j+1] > mat[i][j] + 1 {
-            mat[i][j+1] = mat[i][j] + 1
-            q = append(q, [2]int{i,j+1})
-        }
+        
     }
     return mat
+
 }
